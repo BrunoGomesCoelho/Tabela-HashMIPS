@@ -102,17 +102,17 @@ insercao:
 	move $t3, $s0
 	mul $t1, $t1, 4 		# quantidade de bytes de deslocamento até a posicao desejada
 	
-	add $t3, $t3, $t1 		# posicao de insercao
-	lw $t4, 0($t3)
+	add $t1, $t3, $t1 		# posicao de insercao
+	move $t3, $t1
+	lw $t3, 0($t3)
 
 	#percorrer lista
-	addi $t4, $t4, 4		# pega valor do no
-	lw $t4, 0($t4)			# t4 = nó
+	lw $t4, 4($t3)			# t4 = nó
 
 	findPlace:
 		blt $t4, $zero, found 	# while no->valor >= 0
 		bge $t4, $t0, found 	# while no->valor < my_valor
-		lw $t3, 8($t3) 		# vai para o prox no
+		lw  $t3, 8($t3)         # vai para o prox no
 		lw $t4, 4($t3) 		# pega valor do prox no
 		j findPlace
 
@@ -131,11 +131,18 @@ insercao:
 	#atribuir valor ao nó
 	sw $t0, 4($t5)
 		
-	#apontar da forma correta
+	#rearranjar ponteiros
 	lw $t6, 0($t3) 			#$t6 eh o no anterior
 		
 	sw $t5, 0($t3) 			# aponta #t3 para novo_no
-	sw $t5, 8($t6) 			# aponta anterior para novo_no
+	beq $t6, $zero, isFirst
+	sw $t5, 8($t6) 			# aponta anterior para novo_no se $t6 != 0
+	j continue
+	
+	isFirst: # caso especial se for o primeiro nó na lista
+		sw $t5, 0($t1) # muda o endereco guardado no vetor pois o primeiro elemento da lista foi trocado
+	continue:
+	
 	sw $t3, 8($t5) 			# aponta novo_no para $t3
 	sw $t6, 0($t5) 			# aponta novo_no para anterior
 
@@ -233,7 +240,7 @@ forLoopImpressao:
 		li $v0, 1			# print int
 		move $a0, $t3		
 		syscall				# printf("%d", no->valor)
-		lw $t2, 8($t2)		# t0 = t0->proximo_nó
+		lw $t2, 8($t2)		# t2 = t2->proximo_nó
 		j LoopImpressaoNo	# Vamos para o próximo nó
 	j forLoopImpressao
 	
