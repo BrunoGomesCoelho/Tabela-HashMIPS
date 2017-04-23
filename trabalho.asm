@@ -30,7 +30,7 @@
 		.asciiz "Chave encontrada na "
 	strSearchFound1:
 		.asciiz "a posicao na hash, "
-	strSearchNotFound2:
+	strSearchFound2:
 		.asciiz "a posicao na lista\n"
 	strInvalidSearch:
 		.asciiz "Chave inválida. Retornando ao menu.\n"
