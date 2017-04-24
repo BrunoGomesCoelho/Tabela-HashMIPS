@@ -1,5 +1,10 @@
-# Uma tabela Hash implementada em Assembly MIPS para a matéria de Organização de Computadores Digitais
-# Membros: Bruno Coelho, Gabriel Cruz, Gabriel Cyrillo, Alex Sander
+# Uma tabela Hash implementada em Assembly MIPS para a matéria de Organização de Computadores Digitais.
+# Turma 2, grupo 9.
+# Membros: 
+#	Bruno Coelho - 9791160
+#	Gabriel Cruz - 9763043
+#	Gabriel Cyrillo - 9763022
+#	Alex Sander R. Silva - 9779350
 
 .data
 .align 0
@@ -18,23 +23,16 @@
 	strInicioImpressao:	.asciiz "\nImpressão da Tabela Hash\n"
 	strInicioLinhaImpressao:	.asciiz "Linha["
 	strFimLinhaImpressao:	.asciiz "]: "
-	strLinhaVaziaImpressao:	.asciiz " **Linha Vazia**"
-	strFimImpressao: .asciiz "Fim da impressão, voltando ao menu\n"
+	strFimImpressao:	.asciiz "Fim da impressão, voltando ao menu\n"
 	
 	#Search Strings
-	strSearchQuerry:
-		.asciiz "Digite a chave a ser consultada ou -1 para retornar: "
-	strSearchNotFound:
-		.asciiz "Chave não encontrada\n"
-	strSearchFound0:
-		.asciiz "Chave encontrada na "
-	strSearchFound1:
-		.asciiz "a posicao na hash, "
-	strSearchFound2:
-		.asciiz "a posicao na lista\n"
-	strInvalidSearch:
-		.asciiz "Chave inválida. Retornando ao menu.\n"
-
+	strSearchQuerry:	.asciiz "Digite a chave a ser consultada ou -1 para retornar: "
+	strSearchNotFound:	.asciiz "Chave não encontrada\n"
+	strSearchFound0:	.asciiz "Chave encontrada na posicao "
+	strSearchFound1:	.asciiz " da hash, posicao "
+	strSearchFound2:	.asciiz " da lista\n"
+	strInvalidSearch:	.asciiz "Chave inválida. Retornando ao menu.\n"
+	
 .text
 .globl main
 
@@ -91,10 +89,9 @@ menu:
 	j invalidInput			# se chegar aqui, o usuario digitou algum número não valido
 
 
-# Funções Placeholders, depois coloquem as suas partes aqui.
+###################################################	INSERÇÂO
 
 insercao:
-
 	# $t0 = valor a ser inserido
 	# $t1 = posicao de insercao no vetor
 	# $t2 = aux(16)
@@ -159,14 +156,17 @@ insercao:
 	sw $t5, 8($t6) 			# aponta anterior para novo_no se $t6 != 0
 	j continue
 	
-	isFirst: # caso especial se for o primeiro nó na lista
-		sw $t5, 0($t1) # muda o endereco guardado no vetor pois o primeiro elemento da lista foi trocado
+	# caso especial se for o primeiro nó na lista
+	isFirst: 
+		sw $t5, 0($t1)		# muda o endereco guardado no vetor pois o primeiro elemento da lista foi trocado
+		
 	continue:
-
-	sw $t3, 8($t5) 		# aponta novo_no para $t3
-	sw $t6, 0($t5) 		# aponta novo_no para anterior
+		sw $t3, 8($t5) 		# aponta novo_no para $t3
+		sw $t6, 0($t5) 		# aponta novo_no para anterior
 
 	j menu
+	
+###################################################	REMOÇÂO
 
 remocao:
 	# Imprime string que pede valor
@@ -175,33 +175,34 @@ remocao:
 	syscall
 	
 	# Lê do usuário o inteiro que deve ser removido 
-	jal leInt 			# $v0 = int(input())
-	move $t0, $v0		# $t0 = $v0
+	jal leInt 				# $v0 = int(input())
+	move $t0, $v0			# $t0 = $v0
 	blt $t0, $zero, removeError
 	
 	# Faz mod, a fim de achar a posição para a procura do elemento
 	li $t2, 16
-	div $t0, $t2		# $t0/16
-	mfhi $t1 			# $t1 = $t0 % 16
+	div $t0, $t2			# $t0/16
+	mfhi $t1 				# $t1 = $t0 % 16
 	
-	li $t3, 4			# Endereço da lista = (end. do Hash) + 4 * mod
+	# Endereço da lista = (end. do Hash) + 4 * mod
+	li $t3, 4			
 	move $t6, $s0	
 	mul $t1, $t1, $t3
 	add $t6, $t6, $t1
 	
-	lw $t6, 0($t6) 		# Acesse o endereço que contém o primeiro nó da lista
+	lw $t6, 0($t6) 			# Acesse o endereço que contém o primeiro nó da lista
 	li $t7, -1
 	
 searchRemocao:
 	# Leitura do nó atual
-	lw $t0, 0($t6)		# $t0 (previous)
-	lw $t1, 4($t6)		# $t1 (current)
-	lw $t2, 8($t6)		# $t2 (next)
+	lw $t0, 0($t6)			# $t0 (previous)
+	lw $t1, 4($t6)			# $t1 (current)
+	lw $t2, 8($t6)			# $t2 (next)
 	
 	beq $t1, $v0, movePointersRemocao # Se acha-lo, remova-o
 	beq $t1, $t7, removeError	 	  # Caso a lista acabe e não tenha achado, imprima uma menssagem de erro
 	
-	move $t6, $t2		# Continue a procurar na lista
+	move $t6, $t2			# Continue a procurar na lista
 	j searchRemocao
 	
 movePointersRemocao:
@@ -226,9 +227,9 @@ firstElementRemocao:
 	
 	j menu
 
-##### Busca
+################################################### BUSCA
+
 search:
-	#Search por Alex Sander R. Silva - 9779350
 	#s0 = &hash[0]
 	#t0 = key
 	#t1 = -1
@@ -237,10 +238,10 @@ search:
 	#t4 = value
 	#t5 = hashPos
 	#t6 = listPos
-	
+
 	#init
-	li $t1, -1	#t1 = -1
-	li $t2, 16	#t2 = 16
+	li $t1, -1				#t1 = -1
+	li $t2, 16				#t2 = 16
 
 sNextQuerry:
 	#Print str SearchQuerry
@@ -251,66 +252,61 @@ sNextQuerry:
 	#Scan int key
 	li $v0, 5
 	syscall
-	
-	move $t0, $a0	#t0 = key
-	li $t6, 0		#t6 = listPos = 0
-	
+	move $t0, $v0			#t0 = key
+	li $t6, 0				#t6 = listPos = 0
+
 	#While key >= 0
 	blt $t0, $zero, sEndSearch
+
 		#hashPos = key % 16
 		div $t0, $t2
-		mfhi $t5
-		
+		mfhi $t5		
+
 		#ptr = hash[hashPos] = (node *)
 		mul $t3, $t5, 4
 		add $t3, $t3, $s0
-		
+		lw $t3, ($t3)
+
 		#value = node->value
 		lw $t4, 4($t3)
 
 	sListSearch:
 		#While (value != -1 and value > key)
 		beq $t4, $t1, sEndListSearch
-		bgt $t4, $t0, sEndListSearch
-			#pos = node->next = (node *)
-			lw $t3, 8($t3)
-			
-			#value = node->value
-			lw $t4, 4($t3)
-			
-			#listPos++
-			addi, $t6, $t6, 1
+		bge $t4, $t0, sEndListSearch
+			lw $t3, 8($t3)	# pos = node->next = (node *)
+			lw $t4, 4($t3)	# value = node->value
+			addi, $t6, $t6, 1	# listPos++
 		j sListSearch
-		
 		
 	sEndListSearch:
 		#Value == key => Found
-		beq $t3, $t0, sFound
-	
+		beq $t4, $t0, sFound
+
 	sNotFound:
 		#Print str SearchNotFound
 		li $v0, 4
 		la $a0, strSearchNotFound
 		syscall
-		
+
 		j sNextQuerry
-	
+
 	sFound:
 		#Print str SearchFound0
 		li $v0, 4
 		la $a0, strSearchFound0
 		syscall
-		
+
 		#Print int hashPos
 		li $v0, 1
 		move $a0, $t5
 		syscall
-		
+
 		#Print str SearchFound1
 		li $v0, 4
 		la $a0, strSearchFound1
 		syscall
-		
+
 		#Print int listPos
 		li $v0, 1
 		move $a0, $t6
@@ -320,10 +316,11 @@ sNextQuerry:
 		li $v0, 4
 		la $a0, strSearchFound2
 		syscall
+		j sNextQuerry
 
 sEndSearch:
 	#If key == -1 goto menu
-	beq $t0, $t2, menu
+	beq $t0, $t1, menu
 	
 	#Print str InvalidSearch
 	li $v0, 4
@@ -331,6 +328,8 @@ sEndSearch:
 	syscall
 	
 	j menu
+
+################################################### IMPRESSÂO
 
 impressao:
 	# $t0 = posição atual no vetor
@@ -389,7 +388,7 @@ fimImpressao:
 	syscall
 	j menu
 
-#=============UTILS==============#
+################################################### FUNÇÔES AUXILIARES
 
 endProgram:
 	li $v0, 4				# imprime string
