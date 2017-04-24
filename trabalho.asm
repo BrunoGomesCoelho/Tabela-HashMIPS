@@ -5,6 +5,13 @@
 #	Gabriel Cruz - 9763043
 #	Gabriel Cyrillo - 9763022
 #	Alex Sander R. Silva - 9779350
+#
+# Recomendamos o uso de 4 espaçõs por taba para a correta visualização do arquivo.
+# Implentamos um vetor com 16 posições. Inicialmente, todas as posições têm um nó sentinela-nulo.
+# A configuração de um nó na memória é: nó->anterior, valor, próximo-nó.
+# O nó sentinela tem como valores: 0, -1, 0. No fim de uma lista duplamente encadeada, sempre há um nó sentinela.
+
+
 
 .data
 .align 0
@@ -13,7 +20,7 @@
 	strInsert:	.asciiz "\nDigite o valor a ser inserido: "
 	strRemove:	.asciiz "\nDigite o valor a ser removido: "
 	strInicio:	.asciiz "Tabela Hash de inteiros implementada em MIPS Assembly.\n"
-	strOpcao:	.asciiz  "Digite 1 para a inserção de um número, 2 para remoção, 3 para busca, 4 para a visualazição da tabela e 5 para sair do programa.\n"
+	strOpcao:	.asciiz  "\nDigite 1 para a inserção de um número, 2 para remoção, 3 para busca, 4 para a visualazição da tabela e 5 para sair do programa.\n"
 	strInvalidInput: .asciiz "Entrada inválida\n"
 	strExit:.asciiz "Finalizando programa\n"
 	strInsertError: .asciiz "O número digitado já foi inserido.\n"
@@ -28,8 +35,8 @@
 	#Search Strings
 	strSearchQuerry:	.asciiz "Digite a chave a ser consultada ou -1 para retornar: "
 	strSearchNotFound:	.asciiz "Chave não encontrada\n"
-	strSearchFound0:	.asciiz "Chave encontrada na posicao "
-	strSearchFound1:	.asciiz " da hash, posicao "
+	strSearchFound0:	.asciiz "Chave encontrada na posicão "
+	strSearchFound1:	.asciiz " da hash, posicão "
 	strSearchFound2:	.asciiz " da lista\n"
 	strInvalidSearch:	.asciiz "Chave inválida. Retornando ao menu.\n"
 	
@@ -193,17 +200,17 @@ remocao:
 	lw $t6, 0($t6) 			# Acesse o endereço que contém o primeiro nó da lista
 	li $t7, -1
 	
-searchRemocao:
-	# Leitura do nó atual
-	lw $t0, 0($t6)			# $t0 (previous)
-	lw $t1, 4($t6)			# $t1 (current)
-	lw $t2, 8($t6)			# $t2 (next)
+	searchRemocao:
+		# Leitura do nó atual
+		lw $t0, 0($t6)			# $t0 (previous)
+		lw $t1, 4($t6)			# $t1 (current)
+		lw $t2, 8($t6)			# $t2 (next)
+		
+		beq $t1, $v0, movePointersRemocao # Se acha-lo, remova-o
+		beq $t1, $t7, removeError	 	  # Caso a lista acabe e não tenha achado, imprima uma menssagem de erro
 	
-	beq $t1, $v0, movePointersRemocao # Se acha-lo, remova-o
-	beq $t1, $t7, removeError	 	  # Caso a lista acabe e não tenha achado, imprima uma menssagem de erro
-	
-	move $t6, $t2			# Continue a procurar na lista
-	j searchRemocao
+		move $t6, $t2			# Continue a procurar na lista
+		j searchRemocao
 	
 movePointersRemocao:
 	# Caso seja o primeiro elemento (não havendo antecessor), trate como exceção
