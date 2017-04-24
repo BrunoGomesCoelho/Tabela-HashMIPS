@@ -169,55 +169,59 @@ insercao:
 	j menu
 
 remocao:
-	li $v0, 4 			# Imprimir string que pede valor
+	# Imprime string que pede valor
+	li $v0, 4 
 	la $a0, strRemove
 	syscall
 	
+	# Lê do usuário o inteiro que deve ser removido 
 	jal leInt 			# $v0 = int(input())
 	move $t0, $v0		# $t0 = $v0
 	blt $t0, $zero, removeError
 	
-	# Fazer mod
+	# Faz mod, a fim de achar a posição para a procura do elemento
 	li $t2, 16
 	div $t0, $t2		# $t0/16
 	mfhi $t1 			# $t1 = $t0 % 16
 	
-	li $t3, 4			# endereço = (end. do Hash) + 4 * mod
+	li $t3, 4			# Endereço da lista = (end. do Hash) + 4 * mod
 	move $t6, $s0	
 	mul $t1, $t1, $t3
 	add $t6, $t6, $t1
 	
-	lw $t6, 0($t6) 		# Acesse o end que contém o primeiro nó da lista
+	lw $t6, 0($t6) 		# Acesse o endereço que contém o primeiro nó da lista
 	li $t7, -1
 	
 searchRemocao:
+	# Leitura do nó atual
 	lw $t0, 0($t6)		# $t0 (previous)
 	lw $t1, 4($t6)		# $t1 (current)
 	lw $t2, 8($t6)		# $t2 (next)
 	
-	beq $t1, $v0, movePointersRemocao # Se achar, remova-o
+	beq $t1, $v0, movePointersRemocao # Se acha-lo, remova-o
 	beq $t1, $t7, removeError	 	  # Caso a lista acabe e não tenha achado, imprima uma menssagem de erro
 	
-	move $t6, $t2			# Continue a procurar na lista
+	move $t6, $t2		# Continue a procurar na lista
 	j searchRemocao
 	
 movePointersRemocao:
+	# Caso seja o primeiro elemento (não havendo antecessor), trate como exceção
 	beq $t0, $zero, firstElementRemocao
 	
-	sw $t0, 0($t2)			# o anterior do próximo recebe o anterior do atual
-	sw $t2, 8($t0)			# o próximo do anterior recebe o próximo do atual
+	sw $t0, 0($t2)			# o anterior do próximo nó recebe o anterior do nó atual
+	sw $t2, 8($t0)			# o próximo do nó anterior recebe o próximo do nó atual
 	
 	j menu
 	
 firstElementRemocao:
-	lw $t7, 4($t2)			# Caso seja o primeiro, copie parte do próximo elemento
+	lw $t7, 4($t2)			# Caso seja o primeiro elemento da lista, copie parte do próximo elemento
 	lw $t8, 8($t2)			# para ele (o valor e o ponteiro para o próximo nó. 
-							# O ponteiro anterior continua o mesmo)
+							# O ponteiro anterior continua o mesmo, contendo $zero)
 	sw $t7, 4($t6)
 	sw $t8, 8($t6)
 	
-	lw $t2, 8($t2)			# Vá para o próximo nó e atualize o seu anterior
-	beq $t2, $zero, menu
+	lw $t2, 8($t2)			# Vá para o próximo nó e atualize o seu ponteiro para anterior
+	beq $t2, $zero, menu	# Só se houver próximo nó. Senão, volte para o menu
 	sw $t6, 0($t2)
 	
 	j menu
@@ -248,7 +252,7 @@ sNextQuerry:
 	li $v0, 5
 	syscall
 	
-	move $t0, $a0		#t0 = key
+	move $t0, $a0	#t0 = key
 	li $t6, 0		#t6 = listPos = 0
 	
 	#While key >= 0
