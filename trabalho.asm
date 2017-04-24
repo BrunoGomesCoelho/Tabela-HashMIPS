@@ -162,9 +162,9 @@ insercao:
 	isFirst: # caso especial se for o primeiro nó na lista
 		sw $t5, 0($t1) # muda o endereco guardado no vetor pois o primeiro elemento da lista foi trocado
 	continue:
-	
-	sw $t3, 8($t5) 			# aponta novo_no para $t3
-	sw $t6, 0($t5) 			# aponta novo_no para anterior
+
+	sw $t3, 8($t5) 		# aponta novo_no para $t3
+	sw $t6, 0($t5) 		# aponta novo_no para anterior
 
 	j menu
 
@@ -174,12 +174,12 @@ remocao:
 	syscall
 	
 	jal leInt 			# $v0 = int(input())
-	move $t0, $v0			# $t0 = $v0
+	move $t0, $v0		# $t0 = $v0
 	blt $t0, $zero, removeError
 	
 	# Fazer mod
 	li $t2, 16
-	div $t0, $t2			# $t0/16
+	div $t0, $t2		# $t0/16
 	mfhi $t1 			# $t1 = $t0 % 16
 	
 	li $t3, 4			# endereço = (end. do Hash) + 4 * mod
@@ -187,34 +187,38 @@ remocao:
 	mul $t1, $t1, $t3
 	add $t6, $t6, $t1
 	
-	lw $t6, 0($t6) 			# Acesse o end que contém o primeiro nó da lista
+	lw $t6, 0($t6) 		# Acesse o end que contém o primeiro nó da lista
 	li $t7, -1
 	
 searchRemocao:
-	lw $a0, 0($t6)			# $a0 (previous)
-	lw $t0, 4($t6)			# $t0 (current)
-	lw $a1, 8($t6)			# $a1 (next)
+	lw $t0, 0($t6)		# $t0 (previous)
+	lw $t1, 4($t6)		# $t1 (current)
+	lw $t2, 8($t6)		# $t2 (next)
 	
-	beq $t0, $v0, movePointersRemocao # Se achar, remova-o
-	beq $t0, $t7, removeError	  # Caso a lista acabe e não tenha achado, imprima uma menssagem de erro
+	beq $t1, $v0, movePointersRemocao # Se achar, remova-o
+	beq $t1, $t7, removeError	 	  # Caso a lista acabe e não tenha achado, imprima uma menssagem de erro
 	
-	move $t6, $a1			 # Continue a procurar na lista
+	move $t6, $t2			# Continue a procurar na lista
 	j searchRemocao
 	
 movePointersRemocao:
-	beq $a0, $zero, firstElementRemocao
+	beq $t0, $zero, firstElementRemocao
 	
-	sw $a0, 0($a1)			# o anterior do próximo recebe o anterior do atual
-	sw $a1, 8($a0)			# o próximo do anterior recebe o próximo do atual
+	sw $t0, 0($t2)			# o anterior do próximo recebe o anterior do atual
+	sw $t2, 8($t0)			# o próximo do anterior recebe o próximo do atual
 	
 	j menu
 	
 firstElementRemocao:
-	lw $t7, 4($a1)			# Caso seja o primeiro, copie parte do próximo elemento
-	lw $t8, 8($a1)			# para ele (o valor e o ponteiro para o próximo nó. 
-					# O ponteiro anterior continua o mesmo)
+	lw $t7, 4($t2)			# Caso seja o primeiro, copie parte do próximo elemento
+	lw $t8, 8($t2)			# para ele (o valor e o ponteiro para o próximo nó. 
+							# O ponteiro anterior continua o mesmo)
 	sw $t7, 4($t6)
 	sw $t8, 8($t6)
+	
+	lw $t2, 8($t2)			# Vá para o próximo nó e atualize o seu anterior
+	beq $t2, $zero, menu
+	sw $t6, 0($t2)
 	
 	j menu
 
