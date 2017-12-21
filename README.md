@@ -1,17 +1,49 @@
+
 # Tabela-HashMIPS
-Uma tabela Hash implementada em Assembly MIPS para a matéria de Organização de Computadores Digitais
+Uma tabela Hash implementada em Assembly MIPS para a matéria de Organização de Computadores Digitais. 
 
-### Divisão:
+A hash table implemented in Assembly MIPS for the Digital Computers Organization course. 
 
-Main/Menu - Bruno
+### Language Details
 
-Inserção - Cruz
+The whole project is writen and maintened in Portuguese. This includes file names, variables and comentaries. No, a English port is not available. Except everything from here on to be in Portuguese.
 
-Remoção - Cyrillo
+
+## Table of Contents
+
+- [Credits](#credits)
+- [Background](#background)
+- [Install](#install)
+- [Usage](#usage)
+- [Contribute](#contribute)
+- [License](#license)
+
+## Credits
+
+Main/Menu e Impressão- Bruno(@BrunoGomesCoelho)
+
+Inserção - Cruz(@LTKills)
+
+Remoção - Cyrillo(@GCyrillo)
 
 Busca - Alex
 
-Impressão - Bruno
+
+## Background
+
+Para a matéria de Organizção de Computadors Digitais cursada no primeiro semestre de 2017, implementamos uma tabela hash em Assembly MIPS. O código está todo em um único arquivo, fortemente comentado em português.
+
+## Install
+
+Basta rodar o arquivo "trabalho.asm" no seu emulador favorito de MIPS. Recomendamos o [MARS](http://courses.missouristate.edu/KenVollmar/mars/) onde o projeto foi feito e testado, embora outros emuladores como o  [QT SPIM](http://spimsimulator.sourceforge.net/) devem também funcionar.
+
+
+## Usage
+
+Uma vez rodando, os menus são alto explicativos.
+
+
+## Informações didáticas sobre o código
 
 ### Formato da "struct":
 
@@ -31,4 +63,17 @@ Para chamar uma função modularizada, tem que chamar com JAL (jump and link) pa
 $s1 - Input do usuário no menu
 
 $s0 - Endereço do primeiro nó, já apontando pro valor do meio (o valor).
+
+
+## Contribute
+
+Se quiser contribuir, só forkar. Pull Requests são muito bem vindos.
+
+
+## License
+
+[MIT © Richard McRichface.](../LICENSE)
+
+
+
 
