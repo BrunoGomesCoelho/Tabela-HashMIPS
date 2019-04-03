@@ -1,12 +1,11 @@
 
 # Tabela-HashMIPS
-Uma tabela Hash implementada em Assembly MIPS para a matéria de Organização de Computadores Digitais. 
 
 A hash table implemented in Assembly MIPS for the Digital Computers Organization course. 
 
 ### Language Details
 
-The whole project is writen and maintened in Portuguese. This includes file names, variables and comentaries. No, a English port is not available. Except everything from here on to be in Portuguese.
+The whole project is writen and maintened in Portuguese. This includes file names, variables and comentaries. A English port is not currently available. Except all code from here on to be in Portuguese.
 
 
 ## Table of Contents
@@ -31,25 +30,25 @@ Busca - Alex
 
 ## Background
 
-Para a matéria de Organizção de Computadors Digitais cursada no primeiro semestre de 2017, implementamos uma tabela hash em Assembly MIPS. O código está todo em um único arquivo, fortemente comentado em português.
+For the Digital Computers class of 2017/01, my group's final project is the implementation of a hash table in Assemply MIPS. The whole code was made thinking of readability and is fully comented (albeit, in Portuguese).
 
 ## Install
 
-Basta rodar o arquivo "trabalho.asm" no seu emulador favorito de MIPS. Recomendamos o [MARS](http://courses.missouristate.edu/KenVollmar/mars/) onde o projeto foi feito e testado, embora outros emuladores como o  [QT SPIM](http://spimsimulator.sourceforge.net/) devem também funcionar.
+Just run the file "trabalho.asm" in your favourite MIPS emulator. We personally recomend [MARS](http://courses.missouristate.edu/KenVollmar/mars/) where the project was build and tested, but other emulators such as  [QT SPIM](http://spimsimulator.sourceforge.net/) will also work.
 
 
 ## Usage
 
-Uma vez rodando, os menus são alto explicativos.
+Once running, all the menus are very simple (if you know Portuguese that is).
 
-
-## Informações didáticas sobre o código
+## Techinical Information about the code (in Portuguese):
 
 ### Formato da "struct":
 
 (ponteiro anterior, valor , ponteiro posterior) = 32 bytes (end) -- 32 bytes (inteiro) -- 32 bytes (end).
 
 ### Informaçes:
+
 Caso o primeiro elemento estiver vazio, terá como valor -1 armazenado nele.
 
 No final da função, deêm um "j menu" (jump para o menu).
@@ -68,6 +67,8 @@ $s0 - Endereço do primeiro nó, já apontando pro valor do meio (o valor).
 ## Contribute
 
 Se quiser contribuir, só forkar. Pull Requests são muito bem vindos.
+
+Contributions and PR's are very welcome.
 
 
 ## License
